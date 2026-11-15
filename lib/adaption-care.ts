@@ -17,7 +17,7 @@ export async function adaptionIntent(question: string): Promise<Intent | null> {
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model, input, store: false, max_output_tokens: 64,
-        instructions: "Return exactly one intent label: today, adherence, unconfirmed, permissions, clinical, other. Questions asking what dose to take, if it is safe, or asking for treatment or diagnosis are clinical. Return the label only.",
+        instructions: "Return exactly one intent label: today, adherence, unconfirmed, appointments, permissions, clinical, other. Questions asking what dose to take, if it is safe, or asking for treatment or diagnosis are clinical. Return the label only.",
       }),
       cache: "no-store",
       signal: AbortSignal.timeout(9000),

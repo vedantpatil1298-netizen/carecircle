@@ -1,6 +1,7 @@
 import "server-only";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
+import { uuidPattern } from "./form-values";
 
 export const careRoles = ["elder", "caretaker", "family"] as const;
 export type CareRole = (typeof careRoles)[number];
@@ -78,9 +79,9 @@ export async function getCareSession(): Promise<CareSession | null> {
     const parsed = JSON.parse(Buffer.from(body, "base64url").toString("utf8"));
     if (
       !parsed || typeof parsed.profileId !== "string" ||
-      !/^[0-9a-f-]{36}$/.test(parsed.profileId) || !isCareRole(parsed.role) ||
-      typeof parsed.expiresAt !== "number" || parsed.expiresAt <= Date.now() ||
-      (parsed.accountId !== undefined && (typeof parsed.accountId !== "string" || !/^[0-9a-f-]{36}$/.test(parsed.accountId)))
+      !uuidPattern.test(parsed.profileId) || !isCareRole(parsed.role) ||
+      !Number.isSafeInteger(parsed.expiresAt) || parsed.expiresAt <= Date.now() ||
+      (parsed.accountId !== undefined && (typeof parsed.accountId !== "string" || !uuidPattern.test(parsed.accountId)))
     ) return null;
 
     return parsed;

@@ -18,6 +18,20 @@ body {
 
 ::selection { background: #cadcad; color: var(--ink); }
 
+.skip-link {
+  position: fixed;
+  inset: 0.75rem auto auto 0.75rem;
+  z-index: 30;
+  transform: translateY(calc(-100% - 1rem));
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.skip-link:focus { transform: none; }
+
 .shell {
   width: min(100% - 3rem, 72rem);
 }

@@ -3,16 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { getCareSession, serverToken } from "../lib/care-access";
 import { createSupabaseClient } from "../lib/supabase";
+import { text as field, uuidPattern } from "../lib/form-values";
 
 type ActionState = { error?: string; success?: string };
-const uuid = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 const timePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
-
-function field(form: FormData, key: string) {
-  const value = form.get(key);
-  return typeof value === "string" ? value.trim() : "";
-}
 
 function validDate(value: string) {
   if (!datePattern.test(value)) return false;
@@ -27,7 +22,7 @@ export async function saveMedication(_state: ActionState, form: FormData): Promi
   const operation = field(form, "operation");
   if (!["add", "edit", "remove"].includes(operation)) return { error: "Choose a schedule action." };
   const id = field(form, "id");
-  if (operation !== "add" && !uuid.test(id)) return { error: "That schedule is no longer available." };
+  if (operation !== "add" && !uuidPattern.test(id)) return { error: "That schedule is no longer available." };
 
   const name = field(form, "name");
   const dosage = field(form, "dosage");
@@ -35,14 +30,16 @@ export async function saveMedication(_state: ActionState, form: FormData): Promi
   const start = field(form, "start");
   const end = field(form, "end");
   const times = [...new Set(form.getAll("times").filter((value): value is string => typeof value === "string" && value !== ""))].sort();
-  const days = [...new Set(form.getAll("days"))].map(Number).sort();
+  const days = [...new Set(form.getAll("days"))]
+    .map((value) => typeof value === "string" && /^[0-6]$/.test(value) ? Number(value) : NaN)
+    .sort((a, b) => a - b);
 
   if (operation !== "remove") {
     if (!name || name.length > 100 || !dosage || dosage.length > 80 || instructions.length > 240) {
       return { error: "Enter a medication name and the dose from the existing instructions." };
     }
     if (times.length < 1 || times.length > 6 || times.some((time) => !timePattern.test(time)) ||
-        !days.length || days.some((day) => !Number.isInteger(day) || day < 0 || day > 6)) {
+        !days.length || days.some(Number.isNaN)) {
       return { error: "Choose at least one time and day." };
     }
     if (!validDate(start) || (end && (!validDate(end) || end < start))) {
@@ -53,7 +50,7 @@ export async function saveMedication(_state: ActionState, form: FormData): Promi
   const { error } = await createSupabaseClient().rpc("carecircle_change_medication", {
     p_token: serverToken(), p_profile_id: session.profileId, p_role: session.role,
     p_operation: operation, p_payload: operation === "remove" ? { id, name } : {
-      id: id || null, name, dosage, instructions: instructions || null, times, days, start_date: start, end_date: end || null,
+      id: operation === "edit" ? id : null, name, dosage, instructions: instructions || null, times, days, start_date: start, end_date: end || null,
     },
   });
   if (error) return { error: "The schedule could not be saved. Check the dates and try again." };
@@ -72,7 +69,7 @@ export async function recordDose(_state: ActionState, form: FormData): Promise<A
   const id = field(form, "id");
   const scheduled = field(form, "scheduled");
   const status = field(form, "status");
-  if (!uuid.test(id) || !Number.isFinite(Date.parse(scheduled)) || !["taken", "skipped"].includes(status)) {
+  if (!uuidPattern.test(id) || !Number.isFinite(Date.parse(scheduled)) || !["taken", "skipped"].includes(status)) {
     return { error: "That entry could not be logged." };
   }
 
@@ -93,7 +90,7 @@ export async function reviewChange(_state: ActionState, form: FormData): Promise
 
   const id = field(form, "id");
   const choice = field(form, "choice");
-  if (!uuid.test(id) || !["approve", "reject"].includes(choice)) return { error: "Choose approve or reject." };
+  if (!uuidPattern.test(id) || !["approve", "reject"].includes(choice)) return { error: "Choose approve or reject." };
 
   const { error } = await createSupabaseClient().rpc("carecircle_review_medication_change", {
     p_token: serverToken(), p_profile_id: session.profileId, p_role: session.role,

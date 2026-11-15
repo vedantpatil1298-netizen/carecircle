@@ -26,7 +26,7 @@ export default function HomePage() {
           <Link href="/create" className={styles.start}>Create a profile</Link>
         </header>
 
-        <section className={styles.hero} aria-labelledby="home-heading">
+        <section id="main-content" tabIndex={-1} className={styles.hero} aria-labelledby="home-heading">
           <span className={`brand-mark ${styles.heroMark}`} data-hero-brand aria-hidden="true" />
           <h1 id="home-heading">Make daily care feel a little lighter.</h1>
           <p className={styles.tagline}>One shared place for medications, appointments, and the people who help.</p>

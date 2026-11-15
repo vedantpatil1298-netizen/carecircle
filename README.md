@@ -13,6 +13,12 @@ Use Node.js 24 or a compatible supported Node.js version.
 
 Run `npm run build` to check the production build. The connection check is available at `/api/health`.
 
+## Tests and CI
+
+Run `npm test` for the full suite or `npm run test:coverage` for coverage of the application logic. No API keys, live email, Docker, or production database are needed. GitHub Actions runs the suite and production build on pull requests and updates to `main`.
+
+The suite runs the real schema and migrations in an isolated PostgreSQL instance using PGlite. It verifies single-use enrollment, seeded practice schedules, cross-profile isolation, caretaker proposals, older-adult approval, idempotent dose logging, and appointment permissions. Application tests cover password and session handling, form validation, care assistant requests, and local fallback.
+
 ## Set up Supabase
 
 1. Create a Supabase project. In its SQL Editor, run `supabase/schema.sql` once, then run the files in `supabase/migrations/` in numeric order.
@@ -47,7 +53,7 @@ The dashboard has separate routes for care overview, medication schedules, appoi
 - Schedules use India Standard Time. Add the dose and directions from the existing instructions, select days and times, and mark due entries as taken or skipped.
 - The seven-day percentage divides recorded taken doses by all doses that have become due. A dose without a response is shown as unconfirmed.
 - A caretaker can log a dose and propose schedule changes. The older adult approves or rejects those changes. Family members have read access.
-- Caretakers and family members can ask the care assistant about the schedule, unconfirmed doses, or the seven-day log. Responses come from the signed-in profile’s records. Medical decisions are referred to the care team.
+- Caretakers and family members can ask the care assistant about the schedule, unconfirmed doses, the seven-day log, or upcoming appointments. Responses come from the signed-in profile’s records. Medical decisions are referred to the care team.
 
 The assistant ships with a small local intent classifier. Set `ADAPTION_API_KEY` and `ADAPTION_CARE_MODEL` only when an Adaption-hosted model ID or `stack:<slug>` is ready. That model receives a reduced question for routing. The care records and the answer stay in CareCircle. If model routing is unavailable, the local classifier can still answer from the log.
 

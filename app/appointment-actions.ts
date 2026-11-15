@@ -4,15 +4,10 @@ import { revalidatePath } from "next/cache";
 import { appointmentInput } from "../lib/appointments";
 import { getCareSession, serverToken } from "../lib/care-access";
 import { createSupabaseClient } from "../lib/supabase";
+import { text, uuidPattern } from "../lib/form-values";
 
 type AppointmentState = { error?: string; success?: string };
-const uuid = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
 const inputTime = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
-
-function text(form: FormData, name: string) {
-  const value = form.get(name);
-  return typeof value === "string" ? value.trim() : "";
-}
 
 export async function saveAppointment(_previous: AppointmentState, form: FormData): Promise<AppointmentState> {
   const session = await getCareSession();
@@ -24,7 +19,7 @@ export async function saveAppointment(_previous: AppointmentState, form: FormDat
   }
 
   const id = text(form, "id");
-  if (action !== "add" && !uuid.test(id)) return { error: "This appointment is unavailable." };
+  if (action !== "add" && !uuidPattern.test(id)) return { error: "This appointment is unavailable." };
 
   const doctor = text(form, "doctor");
   const location = text(form, "location");
@@ -45,7 +40,7 @@ export async function saveAppointment(_previous: AppointmentState, form: FormDat
 
   const { error } = await createSupabaseClient().rpc("carecircle_write_appointment", {
     p_token: serverToken(), p_profile_id: session.profileId, p_role: session.role,
-    p_action: action, p_id: id || null, p_doctor: doctor || null,
+    p_action: action, p_id: action === "add" ? null : id, p_doctor: doctor || null,
     p_location: location || null, p_scheduled_at: scheduled, p_notes: notes || null,
   });
 

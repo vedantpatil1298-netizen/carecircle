@@ -2,10 +2,10 @@ import "server-only";
 import { randomBytes, scrypt, timingSafeEqual } from "node:crypto";
 import { digest, isCareRole, serverToken, type CareRole } from "./care-access";
 import { createSupabaseClient } from "./supabase";
+import { uuidPattern } from "./form-values";
 
 const options = { N: 32768, r: 8, p: 3, maxmem: 64 * 1024 * 1024 };
 const dummyHash = "0".repeat(32) + "." + "0".repeat(128);
-export const accountUuid = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/;
 export const inviteFormat = /^[A-Za-z0-9_-]{43}$/;
 
 interface AccountIdentity { id: string; profile_id: string; role: CareRole }
@@ -17,8 +17,8 @@ export interface AccountRoster {
 export function accountIdentity(value: unknown): AccountIdentity | null {
   if (!value || typeof value !== "object") return null;
   const { id, profile_id, role } = value as Partial<AccountIdentity>;
-  return typeof id === "string" && accountUuid.test(id) &&
-    typeof profile_id === "string" && accountUuid.test(profile_id) && isCareRole(role)
+  return typeof id === "string" && uuidPattern.test(id) &&
+    typeof profile_id === "string" && uuidPattern.test(profile_id) && isCareRole(role)
     ? { id, profile_id, role } : null;
 }
 

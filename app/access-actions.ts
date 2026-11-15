@@ -6,22 +6,14 @@ import {
   clearCareSession, clientHash, digest, getCareSession, isCareRole,
   normalizePasscode, passcodeHash, serverToken, setCareSession, validPasscode,
 } from "../lib/care-access";
-import { accountIdentity, accountUuid, emailFormat, hashPassword, inviteFormat, inviteHash, inviteToken, passwordMatches } from "../lib/account-security";
+import { accountIdentity, emailFormat, hashPassword, inviteFormat, inviteHash, inviteToken, passwordMatches } from "../lib/account-security";
+import { field, text, uuidPattern } from "../lib/form-values";
 import { sendVerification, verificationAvailable } from "../lib/verification-email";
 import { createSupabaseClient } from "../lib/supabase";
 
 type AccessState = { error?: string; success?: string };
 const genders = ["woman", "man", "non-binary", "self-described", "prefer-not-to-say"];
 const invalidSignIn = "That email and password didn’t match.";
-
-function field(form: FormData, key: string) {
-  const value = form.get(key);
-  return typeof value === "string" ? value : "";
-}
-
-function text(form: FormData, key: string) {
-  return field(form, key).trim();
-}
 
 export async function createProfile(_previous: AccessState, form: FormData): Promise<AccessState> {
   const name = text(form, "elderName");
@@ -122,7 +114,7 @@ export async function passwordSignIn(_previous: AccessState, form: FormData): Pr
 export async function inviteMember(_previous: AccessState, form: FormData): Promise<AccessState> {
   const session = await getCareSession();
   const target = text(form, "target");
-  if (!session?.accountId || !accountUuid.test(target)) return { error: "Sign in as the account owner to invite a member." };
+  if (!session?.accountId || !uuidPattern.test(target)) return { error: "Sign in as the account owner to invite a member." };
   if (!verificationAvailable()) return { error: "The email sender is temporarily unavailable." };
 
   try {

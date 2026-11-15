@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 
-const suggestions = ["What’s scheduled today?", "Which doses are unconfirmed?", "Show the weekly dose log"];
+const suggestions = ["What’s scheduled today?", "Which doses are unconfirmed?", "Show the weekly dose log", "When is the next appointment?"];
 type Message = { role: "user" | "assistant"; text: string; engine?: string };
 
 export function CareChat() {
@@ -44,7 +44,7 @@ export function CareChat() {
   return (
     <section className="care-section care-chat" id="assistant" aria-labelledby="care-chat-title">
       <h2 id="care-chat-title">Care assistant</h2>
-      <p className="care-muted">Ask about this profile’s schedule, recorded doses, or access. For medical questions, ask your care team.</p>
+      <p className="care-muted">Ask about medication schedules, recorded doses, appointments, or who can access this profile. For medical questions, ask your care team.</p>
       <div className="chat-suggestions">
         {suggestions.map((text) => <button type="button" className="button button-secondary" key={text} disabled={pending} onClick={() => void ask(text)}>{text}</button>)}
       </div>

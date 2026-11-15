@@ -10,7 +10,7 @@ export function AccessLayout({ children, dashboard = false }: { children: ReactN
           CareCircle
         </Link>
       </header>
-      <div className={dashboard ? "access-page care-dashboard" : "access-page"}>{children}</div>
+      <div id="main-content" tabIndex={-1} className={dashboard ? "access-page care-dashboard" : "access-page"}>{children}</div>
     </main>
   );
 }
