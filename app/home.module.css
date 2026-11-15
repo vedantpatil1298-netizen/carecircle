@@ -138,28 +138,47 @@
   margin-bottom: clamp(2rem, 4vw, 3.65rem);
 }
 
-.steps {
-  margin: 0;
-  padding: 0;
-  counter-reset: care-step;
+.journey { position: relative; }
+.journeyLine {
+  position: absolute;
+  top: var(--journey-top, 0px);
+  left: var(--journey-x, 0px);
+  width: 4px;
+  height: var(--journey-height, 0px);
+  transform: translateX(-50%);
+  pointer-events: none;
 }
+.journeyTrack { stroke: #c4d7c6; stroke-width: 2; }
+.journeyProgress {
+  stroke: #285e44;
+  stroke-width: 3;
+  stroke-dasharray: 100;
+  stroke-dashoffset: var(--journey-offset, 100);
+}
+.steps { margin: 0; padding: 0; }
 
 .steps li {
-  counter-increment: care-step;
   display: grid;
   grid-template-columns: 2rem minmax(12rem, 0.72fr) minmax(16rem, 1fr);
   column-gap: clamp(1rem, 3vw, 3rem);
-  align-items: baseline;
+  align-items: start;
   border-top: 1px solid #a9bdab;
   padding-block: clamp(1.55rem, 3.6vw, 2.8rem);
 }
 
 .steps li:last-child { border-bottom: 1px solid #a9bdab; }
-.steps li::before {
-  content: counter(care-step) ".";
-  font-size: 1.2rem;
+.stepMarker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #95b5a0;
+  border-radius: 50%;
+  background: #fafbf4;
+  color: #294f3e;
+  font-size: 1rem;
   font-weight: 700;
-  color: #365544;
 }
 
 .steps h3 {
@@ -190,11 +209,12 @@
   .hero { padding-top: clamp(3.35rem, 9svh, 5.5rem); padding-bottom: 8rem; }
   .heroActions a { padding-inline: 1.2rem; }
   .guide { width: min(100% - 2.2rem, 68rem); }
-  .steps li { grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0.45rem 0.75rem; }
+  .steps li { grid-template-columns: 2rem minmax(0, 1fr); gap: 0.45rem 0.75rem; }
   .steps p { grid-column: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroMark { animation: none; }
+  .journeyProgress { stroke-dashoffset: 0; }
   .start:active, .heroActions a:active { transform: none; }
 }
