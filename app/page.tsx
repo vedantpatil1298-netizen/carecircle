@@ -1,4 +1,4 @@
-import { ConnectionCheck } from "../components/connection-check";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
@@ -15,7 +15,10 @@ export default function HomePage() {
             One shared place for medications and appointments, with the older
             adult deciding what changes to their routine.
           </p>
-          <ConnectionCheck />
+          <div className="home-actions">
+            <Link href="/create" className="button">Create a care profile</Link>
+            <Link href="/join" className="button button-secondary">Join with a passcode</Link>
+          </div>
         </section>
 
         <figure className="schedule">
