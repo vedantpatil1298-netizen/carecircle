@@ -20,6 +20,41 @@
   background: url("/carecircle-meadow.webp") center bottom / cover no-repeat;
 }
 
+.clouds {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.clouds span {
+  position: absolute;
+  top: 28%;
+  left: -7%;
+  width: clamp(13rem, 34vw, 40rem);
+  aspect-ratio: 4 / 1;
+  background:
+    radial-gradient(ellipse 30% 48% at 36% 54%, #fff 5%, transparent 100%),
+    radial-gradient(ellipse 24% 50% at 57% 44%, #fff 5%, transparent 100%),
+    radial-gradient(ellipse 47% 36% at 49% 68%, #e9f6ff 16%, transparent 100%);
+  filter: blur(5px);
+  opacity: 0.65;
+}
+
+.clouds span:nth-child(2) { top: 54%; left: 70%; width: clamp(15rem, 37vw, 43rem); opacity: 0.8; }
+.clouds span:nth-child(3) { top: 71%; left: 25%; width: clamp(10rem, 25vw, 27rem); opacity: 0.48; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .clouds span { animation: cloud-drift 38s ease-in-out infinite alternate; }
+  .clouds span:nth-child(2) { animation-duration: 48s; animation-delay: -17s; animation-direction: alternate-reverse; }
+  .clouds span:nth-child(3) { animation-duration: 31s; animation-delay: -9s; }
+}
+
+@keyframes cloud-drift {
+  from { transform: translate3d(-6vw, 0, 0); }
+  to { transform: translate3d(13vw, -1.6rem, 0); }
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -40,7 +75,7 @@
   letter-spacing: -0.038em;
 }
 
-.brand img { display: block; }
+.headerMark { width: 2.25rem; }
 .nav { display: flex; align-items: center; gap: clamp(1rem, 2.2vw, 2.15rem); }
 .nav a { padding-block: 0.65rem; }
 .nav a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
@@ -196,15 +231,27 @@
 @media (max-width: 41rem) {
   .header { flex-wrap: wrap; justify-content: space-between; padding-block: 0.65rem; gap: 0.2rem 0.65rem; }
   .brand { font-size: 1.24rem; }
-  .brand img { width: 30px; height: 30px; }
-  .nav { order: 3; width: 100%; justify-content: flex-end; font-size: 0.9rem; gap: 1rem; }
-  .nav a { padding-block: 0.45rem; }
-  .scene { min-height: max(43rem, 100svh); }
-  .hero { padding-top: clamp(3.35rem, 9svh, 5.5rem); padding-bottom: 8rem; }
+  .headerMark { width: 1.875rem; }
+  .nav { order: 3; width: 100%; justify-content: space-between; flex-wrap: wrap; font-size: 0.94rem; gap: 0 0.65rem; }
+  .nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-block: 0.4rem; }
+  .start { min-height: 2.75rem; padding-inline: 0.82rem; }
+  .scene { min-height: 100svh; }
+  .landscape { background-position: 59% bottom; }
+  .hero { padding-top: clamp(2.1rem, 7svh, 4rem); padding-bottom: clamp(7rem, 16svh, 11rem); }
+  .heroMark { width: clamp(7.6rem, 34vw, 9.5rem); }
+  .hero h1 { font-size: clamp(2rem, 8vw, 3.25rem); }
+  .tagline { max-width: 30ch; }
   .heroActions a { padding-inline: 1.2rem; }
   .guide { width: min(100% - 2.2rem, 68rem); }
   .steps li { grid-template-columns: 2rem minmax(0, 1fr); gap: 0.45rem 0.75rem; }
   .steps p { grid-column: 2; }
+}
+
+@media (max-width: 24rem) {
+  .header { padding-inline: 0.75rem; }
+  .start { padding-inline: 0.65rem; font-size: 0.88rem; }
+  .heroActions { width: 100%; max-width: 16rem; margin-inline: auto; }
+  .heroActions a { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -269,6 +316,10 @@
 .faq details:last-child { border-bottom: 1px solid #a9bdab; }
 .faq summary { font-size: clamp(1.18rem, 2.25vw, 1.48rem); font-weight: 700; cursor: pointer; }
 .faq summary:focus-visible { outline: 2px solid #173e64; outline-offset: 4px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .roleOptions button, .faq summary { cursor: url("/carecircle-cursor-link.svg") 4 2, pointer; }
+}
 .faq p { color: #354d41; margin-top: 0.7rem; max-width: 58ch; }
 
 .finalCall { text-align: center; padding: clamp(4rem, 9vw, 8rem) 1.25rem; background: #cbe5f7; }
@@ -322,7 +373,6 @@
 @media (max-width: 46rem) {
   .roleInner { grid-template-columns: 1fr; }
   .roleCard { min-height: 0; }
-  .navRoles { display: none; }
 }
 
 .brandEntrance {
@@ -332,24 +382,24 @@
   display: grid;
   place-items: center;
   background: #a9d6f6;
-  pointer-events: none;
-  animation: enter-cover 1.35s linear both;
+  --intro-hold: 3s;
+  --intro-transition: 700ms;
+  animation: enter-cover var(--intro-transition) linear var(--intro-hold) both;
 }
 
-.brandEntrance img {
+.entranceMark {
   width: clamp(13rem, 31vw, 24rem);
-  height: auto;
-  animation: enter-logo 1.35s cubic-bezier(0.65, 0, 0.2, 1) both;
+  animation: enter-logo var(--intro-transition) cubic-bezier(0.65, 0, 0.2, 1) var(--intro-hold) both;
 }
 
 @keyframes enter-cover {
-  0%, 62% { opacity: 1; }
+  0%, 54% { opacity: 1; }
   100% { opacity: 0; }
 }
 
 @keyframes enter-logo {
-  0%, 18% { transform: translate(0, 0) scale(1); }
-  67%, 100% { transform: translate(var(--intro-x, 0), var(--intro-y, 0)) scale(var(--intro-scale, 0.45)); }
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(var(--intro-x, 0), var(--intro-y, 0)) scale(var(--intro-scale, 0.45)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

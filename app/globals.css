@@ -30,7 +30,38 @@ body {
   font-weight: 700;
 }
 
-.brand-mark { flex: 0 0 auto; }
+.brand-mark {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 2rem;
+  aspect-ratio: 1;
+}
+
+.brand-mark::before,
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/carecircle-mark.png") center / contain no-repeat;
+}
+
+.brand-mark::before { mask-image: radial-gradient(circle closest-side, transparent 38%, #000 39%); }
+.brand-mark::after {
+  clip-path: circle(20%);
+  transform-origin: 50% 48%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brand-mark::after { animation: heart-beat 2.2s ease-in-out infinite; }
+}
+
+@keyframes heart-beat {
+  0%, 33%, 100% { transform: scale(1); }
+  10% { transform: scale(1.17); }
+  23% { transform: scale(1.11); }
+  17% { transform: scale(0.99); }
+}
 
 h1, h2 {
   font-family: "Instrument Serif", Georgia, serif;
@@ -100,6 +131,10 @@ h1 {
   background: #f9fdff;
   font-weight: 400;
 }
+
+.access-form :where(input:not([type="radio"]):not([type="checkbox"]), select),
+.access-fieldset,
+.dashboard-header > div { min-inline-size: 0; max-inline-size: 100%; }
 
 .access-form button { justify-self: start; }
 .form-error { color: #8e302c; }
@@ -205,3 +240,29 @@ h1 {
 .next-visit { padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--rule); border-radius: 0.9rem; }
 .next-visit a { display: inline-block; margin-top: 0.6rem; font-weight: 700; text-decoration: underline; text-underline-offset: 0.18em; }
 .account-list { max-width: 44rem; }
+
+@media (hover: hover) and (pointer: fine) {
+  body { cursor: url("/carecircle-cursor.svg") 3 2, auto; }
+  a[href], button:not(:disabled), summary, select, input:is([type="checkbox"], [type="radio"]),
+  .entry-details summary { cursor: url("/carecircle-cursor-link.svg") 4 2, pointer; }
+  input:is([type="text"], [type="email"], [type="password"], [type="number"], :not([type])), textarea { cursor: text; }
+}
+
+@media (max-width: 37rem) {
+  .shell { width: calc(100% - 2rem); }
+  .masthead { padding-block: 0.8rem; }
+  .access-page { padding-block: 2rem 3rem; }
+  .access-page h1 { font-size: clamp(2.6rem, 10vw, 3.6rem); overflow-wrap: anywhere; }
+  .access-form label, .access-form button { min-inline-size: 0; }
+  .access-form input:not([type="checkbox"]):not([type="radio"]), .access-select { inline-size: 100%; }
+  .access-radio label { min-height: 2.75rem; }
+  .dashboard-header { display: grid; }
+  .dashboard-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-tabs a { line-height: 1.2; padding-inline: 0.55rem; }
+  .form-dates label { flex-basis: 100%; }
+}
+
+@media (max-width: 25rem) {
+  .access-fields { grid-template-columns: minmax(0, 1fr); }
+  .access-form > .button { justify-self: stretch; }
+}

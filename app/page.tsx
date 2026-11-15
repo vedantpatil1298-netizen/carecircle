@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BrandEntrance } from "../components/brand-entrance";
 import { JourneyLine } from "../components/journey-line";
@@ -11,30 +10,24 @@ export default function HomePage() {
       <BrandEntrance />
       <div className={styles.scene}>
         <div className={styles.landscape} aria-hidden="true" />
+        <div className={styles.clouds} aria-hidden="true">
+          <span /><span /><span />
+        </div>
         <header className={styles.header}>
           <Link href="/" className={styles.brand}>
-            <Image src="/carecircle-mark.png" width={36} height={36} alt="" unoptimized />
+            <span className={`brand-mark ${styles.headerMark}`} aria-hidden="true" />
             CareCircle
           </Link>
           <nav className={styles.nav} aria-label="CareCircle">
             <a href="#how-it-works">How it works</a>
-            <a href="#roles" className={styles.navRoles}>For families</a>
+            <a href="#roles">For families</a>
             <Link href="/join">Sign in</Link>
           </nav>
           <Link href="/create" className={styles.start}>Create a profile</Link>
         </header>
 
         <section className={styles.hero} aria-labelledby="home-heading">
-          <Image
-            src="/carecircle-mark.png"
-            className={styles.heroMark}
-            data-hero-brand
-            width={192}
-            height={192}
-            priority
-            alt=""
-            unoptimized
-          />
+          <span className={`brand-mark ${styles.heroMark}`} data-hero-brand aria-hidden="true" />
           <h1 id="home-heading">Make daily care feel a little lighter.</h1>
           <p className={styles.tagline}>One shared place for medications, appointments, and the people who help.</p>
           <div className={styles.heroActions}>
