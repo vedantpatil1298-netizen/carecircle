@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
+import { AppointmentForm } from "../../components/appointment-form";
+import { appointmentDisplay, appointmentInput, upcomingAppointments } from "../../lib/appointments";
 import { AccessLayout } from "../../components/access-layout";
 import { CareChat } from "../../components/care-chat";
 import { DoseButtons, MedicationForm, RemoveMedication, ReviewButtons } from "../../components/medication-forms";
 import { getCareSession, roleLabels, serverToken } from "../../lib/care-access";
-import { adherence, dateInCareZone, doseTime, medicationOverview, statusLabel, weekdays } from "../../lib/medications";
+import { adherence, careTimeZone, dateInCareZone, doseTime, medicationOverview, statusLabel, weekdays } from "../../lib/medications";
 import { createSupabaseClient } from "../../lib/supabase";
 import { signOut } from "../access-actions";
 
@@ -13,9 +15,10 @@ export default async function DashboardPage() {
   const session = await getCareSession();
   if (!session) redirect("/join");
 
-  const [{ data: elderName, error }, overview] = await Promise.all([
+  const [{ data: elderName, error }, overview, appointments] = await Promise.all([
     createSupabaseClient().rpc("carecircle_profile", { p_token: serverToken(), p_profile_id: session.profileId }),
     medicationOverview(session.profileId, session.role),
+    upcomingAppointments(session.profileId),
   ]);
 
   if (!error && !elderName) redirect("/join");
@@ -26,6 +29,8 @@ export default async function DashboardPage() {
   const today = overview.doses.filter((dose) => dose.is_today);
   const week = adherence(overview.doses);
   const canManage = session.role !== "family";
+  const recentDoses = overview.doses.filter((dose) => dose.status !== "upcoming").reverse();
+  const historyDate = new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short", timeZone: careTimeZone });
   const caretaker = session.role === "caretaker";
   const hasChat = session.role !== "elder";
 
@@ -37,6 +42,8 @@ export default async function DashboardPage() {
         <div className="dashboard-links">
           <a href="#today">{overviewTitle[session.role]}</a>
           <a href="#schedule">Medication schedules</a>
+          <a href="#appointments">Appointments</a>
+          <a href="#dose-history">Dose history</a>
           {hasChat && <a href="#assistant">Care assistant</a>}
         </div>
         <form action={signOut}><button className="button button-secondary">Sign out</button></form>
@@ -80,6 +87,52 @@ export default async function DashboardPage() {
                   </li>
                 ))}
               </ul>
+            )}
+          </section>
+          <section className="care-section" id="appointments" aria-labelledby="appointments-title">
+            <h2 id="appointments-title">Upcoming appointments</h2>
+            {appointments === null ? <p className="care-empty">Appointments are temporarily unavailable. Refresh to try again.</p> : (
+              <>
+                <AppointmentForm />
+                {appointments.length === 0 ? <p className="care-empty">No upcoming visits have been added.</p> : (
+                  <ol className="care-list">
+                    {appointments.map((appointment) => (
+                      <li key={appointment.id} className="dose-row">
+                        <strong>{appointment.doctor_name}</strong>
+                        <p><time dateTime={appointment.scheduled_at}>{appointmentDisplay(appointment.scheduled_at)}</time></p>
+                        {appointment.location && <p className="care-muted">{appointment.location}</p>}
+                        {appointment.notes && <p className="care-muted">{appointment.notes}</p>}
+                        {canManage && (
+                          <div className="schedule-actions">
+                            <AppointmentForm key={appointment.scheduled_at} appointment={appointment} dateTime={appointmentInput(appointment.scheduled_at)} />
+                            <AppointmentForm appointment={appointment} remove />
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </>
+            )}
+          </section>
+          <section className="care-section" id="dose-history" aria-labelledby="dose-history-title">
+            <h2 id="dose-history-title">Dose history</h2>
+            <p className="care-muted">The last seven days, newest first.</p>
+            {recentDoses.length === 0 ? <p className="care-empty">There are no past doses to review yet.</p> : (
+              <details className="entry-details">
+                <summary>View {recentDoses.length} {recentDoses.length === 1 ? "entry" : "entries"}</summary>
+                <ol className="care-list">
+                  {recentDoses.map((dose) => (
+                    <li className="dose-row" key={dose.medication_id + dose.scheduled_for}>
+                      <div className="dose-heading">
+                        <time dateTime={dose.scheduled_for}>{historyDate.format(new Date(dose.scheduled_for))} · {doseTime(dose.scheduled_for)}</time>
+                        <span className={"dose-status dose-" + dose.status}>{statusLabel(dose.status)}</span>
+                      </div>
+                      <strong>{dose.name}</strong> <span>{dose.dosage}</span>
+                    </li>
+                  ))}
+                </ol>
+              </details>
             )}
           </section>
         </div>

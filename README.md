@@ -42,3 +42,7 @@ Passcodes are shown once and stored as keyed hashes. The server verifies each pa
 - Caretakers and family members can ask the care assistant about the schedule, unconfirmed doses, or the seven-day log. Responses come from the signed-in profile’s records. Medical decisions are referred to the care team.
 
 The assistant ships with a small local intent classifier. Set `ADAPTION_API_KEY` and `ADAPTION_CARE_MODEL` only when an Adaption-hosted model ID or `stack:<slug>` is ready. That model receives a reduced question for routing. The care records and the answer stay in CareCircle. If model routing is unavailable, the local classifier can still answer from the log.
+
+## Shared appointments
+
+Everyone on a care profile can add and view upcoming visits in India Standard Time. The older adult and caretaker can edit or remove shared visits. The dashboard also lists the last seven days of due dose entries.
