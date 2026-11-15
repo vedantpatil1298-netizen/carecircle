@@ -32,13 +32,6 @@ body {
 
 .brand-mark { flex: 0 0 auto; }
 
-.hero {
-  grid-template-columns: 1.12fr 1fr;
-  align-items: center;
-  gap: clamp(2rem, 7vw, 6rem);
-  padding-block: clamp(4.5rem, 12vw, 9rem);
-}
-
 h1, h2 {
   font-family: "Instrument Serif", Georgia, serif;
   font-weight: 400;
@@ -50,75 +43,9 @@ h1 {
   letter-spacing: -0.035em;
 }
 
-h1 em {
-  display: block;
-  color: var(--accent);
-}
-
-.intro p {
-  max-width: 34ch;
-  margin-block-start: 1.7rem;
-  font-size: clamp(1.15rem, 1rem + 0.35vw, 1.4rem);
-  color: var(--muted);
-}
-
-.schedule {
-  background: var(--panel);
-  border-radius: 1rem;
-  margin: 0;
-  padding: clamp(1.25rem, 3.5vw, 2.75rem);
-}
-
-.schedule figcaption {
-  margin-bottom: 0.2rem;
-  color: var(--muted);
-  font-size: 1rem;
-}
-
-.schedule h2 {
-  margin-bottom: 0.75rem;
-  font-size: 3rem;
-  line-height: 1;
-}
-
-.schedule li {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 1rem;
-  padding-block: 0.9rem;
-  border-top: 1px solid var(--rule);
-}
-
-.schedule time {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.schedule li span {
-  display: block;
-  color: var(--muted);
-}
-
-.schedule li .taken { color: var(--accent); }
-
-@media (max-width: 46rem) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding-block: 3.5rem;
-  }
-}
-
 @media (max-width: 23rem) {
   .shell { width: calc(100% - 2rem); }
   h1 { font-size: 3.6rem; }
-  .schedule li { gap: 0.65rem; }
-}
-
-.home-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.65rem;
 }
 
 .button {
