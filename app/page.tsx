@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function HomePage() {
   return (
     <main className="shell mx-auto">
       <header className="masthead flex items-center">
-        <span className="brand-mark" aria-hidden="true" />
+        <Image src="/carecircle-mark.png" className="brand-mark" width={32} height={32} alt="" unoptimized />
         <span>CareCircle</span>
       </header>
 

@@ -8,6 +8,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CareCircle",
+  icons: { icon: "/carecircle-mark.png" },
   description: "A shared space for medication routines, appointments, and the people who help with care.",
 };
 
