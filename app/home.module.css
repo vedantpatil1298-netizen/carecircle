@@ -59,7 +59,7 @@
 }
 
 .start:hover { background: #18304a; }
-.start:active, .promptBox button:active:not(:disabled) { transform: scale(0.97); }
+.start:active, .heroActions a:active { transform: scale(0.97); }
 
 .hero {
   display: grid;
@@ -67,15 +67,15 @@
   text-align: center;
   margin-inline: auto;
   max-width: 82rem;
-  padding: clamp(6rem, 15.6svh, 10rem) 1.1rem 10rem;
+  padding: clamp(4.8rem, 12svh, 8rem) 1.1rem 10rem;
 }
 
 .heroMark {
-  width: clamp(5.3rem, 6.3vw, 7rem);
+  width: clamp(9.5rem, 12vw, 12rem);
   height: auto;
   aspect-ratio: 1;
   object-fit: contain;
-  margin-bottom: clamp(1.4rem, 3.8svh, 2.65rem);
+  margin-bottom: clamp(0.65rem, 1.8svh, 1.3rem);
   animation: mark-arrive 780ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -97,98 +97,82 @@
   text-wrap: balance;
 }
 
-.prompt { width: min(100%, 45rem); margin-top: clamp(1.5rem, 3.9svh, 2.3rem); }
-.promptBox {
-  position: relative;
-  min-height: 7.85rem;
+.heroActions {
   display: flex;
-  align-items: stretch;
-  border-radius: 1.6rem;
-  background: linear-gradient(180deg, #fbfdff, #eff7fd);
-  box-shadow: 0 16px 35px #0b376029, 0 2px 5px #123e6620;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 0.9rem;
+  margin-top: clamp(1.65rem, 3.8svh, 2.35rem);
 }
 
-.promptBox:focus-within { outline: 2px solid #173e64; outline-offset: 4px; }
-.promptBox textarea {
-  width: 100%;
-  padding: 1.22rem 1.25rem 2.9rem;
-  background: transparent;
-  border: 0;
-  outline: 0;
-  border-radius: inherit;
-  font: inherit;
-  font-size: 1.0625rem;
-  color: var(--home-ink);
-  resize: none;
+.heroActions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.55rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  font-size: 1.12rem;
+  font-weight: 700;
 }
 
-.promptBox textarea::placeholder { color: #51637a; opacity: 1; }
+.heroPrimary { background: var(--home-ink); color: #fff; }
+.heroPrimary:hover { background: #18304a; }
+.heroSecondary { background: #f5faff; color: var(--home-ink); }
+.heroSecondary:hover { background: #dceefe; }
+.home a:focus-visible { outline: 2px solid #173e64; outline-offset: 4px; }
 
-.promptBox button {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  right: 0.55rem;
-  bottom: 0.55rem;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 50%;
-  border: 0;
-  background: var(--home-ink);
-  color: #fff;
-  cursor: pointer;
+.guide {
+  width: min(100% - 3.6rem, 68rem);
+  margin-inline: auto;
+  padding-block: clamp(4.2rem, 8.2vw, 8rem);
+  scroll-margin-top: 1rem;
 }
 
-.promptBox button:disabled { background: #d5e0eb; color: #556779; cursor: default; }
-.arrow { display: block; position: relative; width: 2px; height: 14px; background: currentColor; border-radius: 1px; }
-.arrow::before {
-  content: "";
-  width: 9px;
-  height: 9px;
-  position: absolute;
-  left: 50%;
-  top: 0;
-  border-left: 2px solid currentColor;
-  border-top: 2px solid currentColor;
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.answer {
-  border-radius: 0.9rem;
-  margin-top: 0.85rem;
-  padding: 1rem 1.15rem;
-  background: #fbfdff;
-  color: var(--home-ink);
-  text-align: left;
-  font-size: 1.06rem;
-}
-
-.answer a { display: inline-block; margin-top: 0.45rem; text-decoration: underline; text-underline-offset: 0.18em; font-weight: 700; }
-.home a:focus-visible, .promptBox button:focus-visible { outline: 2px solid #173e64; outline-offset: 4px; }
-
-.guide { max-width: 65rem; margin-inline: auto; padding: clamp(2.4rem, 7vw, 5rem) 1.4rem; }
 .guide h2 {
   font-family: "Atkinson Hyperlegible Next", sans-serif;
   font-weight: 700;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.65rem, 5vw, 4rem);
   line-height: 1;
   letter-spacing: -0.035em;
-  margin-bottom: 1.8rem;
+  margin-bottom: clamp(2rem, 4vw, 3.65rem);
 }
-.guide dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
-.guide dl div { border-top: 1px solid #b3c4ac; padding-top: 0.8rem; }
-.guide dt { font-weight: 700; }
-.guide dd { margin-top: 0.3rem; color: #354d41; }
 
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+.steps {
+  margin: 0;
   padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  counter-reset: care-step;
+}
+
+.steps li {
+  counter-increment: care-step;
+  display: grid;
+  grid-template-columns: 2rem minmax(12rem, 0.72fr) minmax(16rem, 1fr);
+  column-gap: clamp(1rem, 3vw, 3rem);
+  align-items: baseline;
+  border-top: 1px solid #a9bdab;
+  padding-block: clamp(1.55rem, 3.6vw, 2.8rem);
+}
+
+.steps li:last-child { border-bottom: 1px solid #a9bdab; }
+.steps li::before {
+  content: counter(care-step) ".";
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #365544;
+}
+
+.steps h3 {
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.23;
+}
+
+.steps p {
+  max-width: 39ch;
+  color: #354d41;
+  font-size: clamp(1.12rem, 1.7vw, 1.3rem);
+  line-height: 1.61;
 }
 
 @keyframes mark-arrive {
@@ -199,16 +183,18 @@
 @media (max-width: 41rem) {
   .header { flex-wrap: wrap; justify-content: space-between; padding-block: 0.65rem; gap: 0.2rem 0.65rem; }
   .brand { font-size: 1.24rem; }
-  .brand img { width: 25px; height: 25px; }
+  .brand img { width: 30px; height: 30px; }
   .nav { order: 3; width: 100%; justify-content: flex-end; font-size: 0.9rem; gap: 1rem; }
   .nav a { padding-block: 0.45rem; }
   .scene { min-height: max(43rem, 100svh); }
   .hero { padding-top: clamp(3.35rem, 9svh, 5.5rem); padding-bottom: 8rem; }
-  .promptBox { min-height: 7.35rem; border-radius: 1.25rem; }
-  .guide dl { grid-template-columns: 1fr; }
+  .heroActions a { padding-inline: 1.2rem; }
+  .guide { width: min(100% - 2.2rem, 68rem); }
+  .steps li { grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0.45rem 0.75rem; }
+  .steps p { grid-column: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroMark { animation: none; }
-  .start:active, .promptBox button:active:not(:disabled) { transform: none; }
+  .start:active, .heroActions a:active { transform: none; }
 }

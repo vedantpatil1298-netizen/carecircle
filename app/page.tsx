@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HomeGuide } from "../components/home-guide";
 import styles from "./home.module.css";
 
 export default function HomePage() {
@@ -10,7 +9,7 @@ export default function HomePage() {
         <div className={styles.landscape} aria-hidden="true" />
         <header className={styles.header}>
           <Link href="/" className={styles.brand}>
-            <Image src="/carecircle-mark.png" width={30} height={30} alt="" unoptimized />
+            <Image src="/carecircle-mark.png" width={36} height={36} alt="" unoptimized />
             CareCircle
           </Link>
           <nav className={styles.nav} aria-label="CareCircle">
@@ -24,25 +23,37 @@ export default function HomePage() {
           <Image
             src="/carecircle-mark.png"
             className={styles.heroMark}
-            width={112}
-            height={112}
+            width={192}
+            height={192}
             priority
             alt=""
             unoptimized
           />
           <h1 id="home-heading">Make daily care feel a little lighter.</h1>
           <p className={styles.tagline}>One shared place for medications, dose logs, and the people who help.</p>
-          <HomeGuide />
+          <div className={styles.heroActions}>
+            <Link href="/create" className={styles.heroPrimary}>Create a profile</Link>
+            <Link href="/join" className={styles.heroSecondary}>Join with a passcode</Link>
+          </div>
         </section>
       </div>
 
       <section className={styles.guide} id="how-it-works" aria-labelledby="guide-heading">
         <h2 id="guide-heading">How CareCircle works</h2>
-        <dl>
-          <div><dt>Set up a profile</dt><dd>Create one shared space and keep a passcode for each role.</dd></div>
-          <div><dt>Keep track of the day</dt><dd>See scheduled doses and what’s been recorded as taken, skipped, or unconfirmed.</dd></div>
-          <div><dt>Review changes together</dt><dd>Caretakers can suggest schedule changes for the older adult to review.</dd></div>
-        </dl>
+        <ol className={styles.steps}>
+          <li>
+            <h3>Create or join a profile</h3>
+            <p>Set up a profile for the person receiving care. If someone has already made one, join with the passcode they gave you.</p>
+          </li>
+          <li>
+            <h3>See what’s due today</h3>
+            <p>Check when each medicine is due. The older adult or caretaker can mark it as taken or skipped.</p>
+          </li>
+          <li>
+            <h3>Review changes together</h3>
+            <p>A caretaker can suggest a schedule change. The older adult decides whether to approve it.</p>
+          </li>
+        </ol>
       </section>
     </main>
   );
