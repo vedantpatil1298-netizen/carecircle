@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-export function AccessLayout({ children }: { children: ReactNode }) {
+export function AccessLayout({ children, dashboard = false }: { children: ReactNode; dashboard?: boolean }) {
   return (
     <main className="shell mx-auto">
       <header className="masthead flex items-center">
@@ -10,7 +10,7 @@ export function AccessLayout({ children }: { children: ReactNode }) {
           CareCircle
         </Link>
       </header>
-      <div className="access-page">{children}</div>
+      <div className={dashboard ? "access-page care-dashboard" : "access-page"}>{children}</div>
     </main>
   );
 }

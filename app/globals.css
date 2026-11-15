@@ -226,3 +226,52 @@ h1 em {
 @media (prefers-reduced-motion: reduce) {
   .button:active:not(:disabled) { transform: none; }
 }
+
+.care-dashboard { width: 100%; max-width: 68rem; }
+.dashboard-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; }
+.care-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(1.4rem, 4vw, 3.5rem); margin-top: 2rem; }
+.care-column { display: grid; gap: 2rem; align-content: start; min-width: 0; }
+.care-section { scroll-margin-top: 1rem; }
+.care-section h2 { font-size: clamp(2.1rem, 5vw, 2.85rem); line-height: 1; margin-bottom: 0.65rem; }
+.care-muted, .care-empty { color: var(--muted); }
+.care-empty { margin-block: 0.7rem; }
+.care-list { margin-top: 0.85rem; }
+.dose-row { padding-block: 0.8rem; border-top: 1px solid var(--rule); overflow-wrap: anywhere; }
+.dose-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 0.7rem; }
+.dose-heading time { font-variant-numeric: tabular-nums; }
+.dose-status { color: var(--muted); font-size: 1rem; }
+.dose-taken { color: var(--accent); font-weight: 700; }
+.dose-unconfirmed, .dose-missed { color: #793f24; font-weight: 700; }
+.dose-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.65rem; }
+.form-success { color: var(--accent); }
+
+.adherence-panel, .care-chat { padding: clamp(1rem, 3vw, 1.5rem); background: var(--panel); border-radius: 0.9rem; }
+.adherence-score { font-size: 1.65rem; }
+.adherence-panel progress { width: 100%; accent-color: var(--accent); }
+
+.entry-details { margin-block: 0.5rem; }
+.entry-details summary { cursor: pointer; color: var(--accent); font-weight: 700; min-height: 2.75rem; align-content: center; }
+.entry-details summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.schedule-form { margin: 0.35rem 0 1rem; }
+.schedule-form legend { font-weight: 700; }
+.schedule-form input { min-width: 0; width: 100%; }
+.time-choices > div, .weekday-choices, .form-dates { display: flex; flex-wrap: wrap; gap: 0.55rem 0.8rem; }
+.time-choices input { width: auto; }
+.time-choices button { margin-top: 0.6rem; }
+.weekday-choices label { display: inline-flex; gap: 0.3rem; min-height: 2.75rem; align-items: center; font-weight: 400; }
+.weekday-choices input { min-height: auto; width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--accent); }
+.form-dates label { flex: 1 1 9rem; }
+
+.chat-suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-block: 0.85rem; }
+.chat-suggestions .button { font-size: 1rem; }
+.chat-history { display: grid; gap: 0.75rem; max-height: 24rem; overflow-y: auto; margin-top: 0.75rem; overflow-wrap: anywhere; }
+.chat-history li { padding: 0.65rem 0.75rem; border-radius: 0.65rem; background: var(--paper); white-space: pre-line; }
+.chat-history li[data-role="user"] { justify-self: end; background: #f5edda; max-width: 90%; }
+.chat-history strong { display: block; margin-bottom: 0.2rem; font-size: 0.9rem; }
+.chat-form { margin-top: 0.85rem; }
+.chat-form textarea { min-height: 5rem; padding: 0.55rem; border: 1px solid var(--rule); border-radius: 0.5rem; background: #fffdf8; resize: vertical; width: 100%; }
+.chat-form textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 49rem) {
+  .care-grid { grid-template-columns: 1fr; }
+}
