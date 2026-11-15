@@ -59,6 +59,8 @@ export async function saveMedication(_state: ActionState, form: FormData): Promi
   if (error) return { error: "The schedule could not be saved. Check the dates and try again." };
 
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/history");
+  revalidatePath("/dashboard/medications");
   return { success: session.role === "caretaker" ? "Request sent for the older adult to review." :
     operation === "remove" ? "Schedule removed. Past records are still in the log." : "Schedule saved." };
 }
@@ -81,6 +83,7 @@ export async function recordDose(_state: ActionState, form: FormData): Promise<A
   if (error) return { error: "That entry could not be logged. Refresh the schedule and try again." };
 
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/history");
   return { success: "Dose log updated." };
 }
 
@@ -99,5 +102,7 @@ export async function reviewChange(_state: ActionState, form: FormData): Promise
   if (error) return { error: "This request could not be applied. The schedule may have changed since it was proposed." };
 
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/history");
+  revalidatePath("/dashboard/medications");
   return { success: choice === "approve" ? "Change approved." : "Change rejected." };
 }

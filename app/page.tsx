@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BrandEntrance } from "../components/brand-entrance";
 import { JourneyLine } from "../components/journey-line";
 import { RolePreview } from "../components/role-preview";
 import styles from "./home.module.css";
@@ -7,6 +8,7 @@ import styles from "./home.module.css";
 export default function HomePage() {
   return (
     <main className={styles.home}>
+      <BrandEntrance />
       <div className={styles.scene}>
         <div className={styles.landscape} aria-hidden="true" />
         <header className={styles.header}>
@@ -17,7 +19,7 @@ export default function HomePage() {
           <nav className={styles.nav} aria-label="CareCircle">
             <a href="#how-it-works">How it works</a>
             <a href="#roles" className={styles.navRoles}>For families</a>
-            <Link href="/join">Join with a passcode</Link>
+            <Link href="/join">Sign in</Link>
           </nav>
           <Link href="/create" className={styles.start}>Create a profile</Link>
         </header>
@@ -26,6 +28,7 @@ export default function HomePage() {
           <Image
             src="/carecircle-mark.png"
             className={styles.heroMark}
+            data-hero-brand
             width={192}
             height={192}
             priority
@@ -36,7 +39,7 @@ export default function HomePage() {
           <p className={styles.tagline}>One shared place for medications, appointments, and the people who help.</p>
           <div className={styles.heroActions}>
             <Link href="/create" className={styles.heroPrimary}>Create a profile</Link>
-            <Link href="/join" className={styles.heroSecondary}>Join with a passcode</Link>
+            <Link href="/join" className={styles.heroSecondary}>Sign in</Link>
           </div>
         </section>
       </div>
@@ -48,7 +51,7 @@ export default function HomePage() {
             <li>
               <span className={styles.stepMarker} data-journey-step aria-hidden="true">1</span>
               <h3>Create or join a profile</h3>
-              <p>Set up a profile for the person receiving care. If someone has already made one, join with the passcode they gave you.</p>
+              <p>Set up a profile for the person receiving care. A caretaker or family member verifies their email before setting the first password.</p>
             </li>
             <li>
               <span className={styles.stepMarker} data-journey-step aria-hidden="true">2</span>
@@ -78,8 +81,8 @@ export default function HomePage() {
         <h2 id="questions-heading">Common questions</h2>
         <div className={styles.faq}>
           <details>
-            <summary>How do I share a care profile?</summary>
-            <p>A new profile comes with three passcodes. Save them when they appear and give each person the passcode for their role.</p>
+            <summary>How do I invite someone to a care profile?</summary>
+            <p>Once your email is verified, open Account in the dashboard to invite the other members you added. Each member verifies their own email and chooses a password.</p>
           </details>
           <details>
             <summary>What does “unconfirmed” mean?</summary>
@@ -87,7 +90,7 @@ export default function HomePage() {
           </details>
           <details>
             <summary>Who can manage appointments?</summary>
-            <p>Everyone with a passcode for the profile can add and view upcoming visits. The older adult and caretaker can also edit or remove them.</p>
+            <p>Every member of the care profile can add and view upcoming visits. The older adult and caretaker can also edit or remove them.</p>
           </details>
         </div>
       </section>
@@ -97,7 +100,7 @@ export default function HomePage() {
           <h2 id="final-call-heading">Bring your care circle together.</h2>
           <div className={styles.heroActions}>
             <Link href="/create" className={styles.heroPrimary}>Create a profile</Link>
-            <Link href="/join" className={styles.heroSecondary}>Join with a passcode</Link>
+            <Link href="/join" className={styles.heroSecondary}>Sign in</Link>
           </div>
         </div>
       </section>

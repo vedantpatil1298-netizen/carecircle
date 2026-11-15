@@ -52,5 +52,6 @@ export async function saveAppointment(_previous: AppointmentState, form: FormDat
   if (error) return { error: "The appointment couldn’t be saved. Refresh and try again." };
 
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/appointments");
   return { success: action === "remove" ? "Appointment removed." : "Appointment saved." };
 }

@@ -9,7 +9,7 @@ Use Node.js 24 or a compatible supported Node.js version.
 1. Run `npm ci` to install the project packages.
 2. Copy `.env.example` to `.env.local` and configure Supabase as described below.
 3. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000).
-4. Create a care profile with a fictional name, save the three passcodes, and sign out. Use **Join with a passcode** to try each role.
+4. Configure the email sender below, then create a fictional profile using inboxes you control. Verify the caretaker or family owner first. Invite the other members from **Account** and try **Switch account**.
 
 Run `npm run build` to check the production build. The connection check is available at `/api/health`.
 
@@ -32,7 +32,15 @@ Run `npm run build` to check the production build. The connection check is avail
 - `lib/` contains Supabase and session helpers.
 - `supabase/` contains the base schema and later migrations.
 
-Passcodes are shown once and stored as keyed hashes. The server verifies each passcode and keeps the selected role in a signed, expiring cookie. Care profiles and contact emails are held in a private database schema.
+New profiles use email-verified role accounts. The first caretaker or family member receives a single-use verification link and chooses a password. The owner can invite the other registered members from **Account**. Each uses their own email and password. Existing role passcodes are accepted only for older profiles without verified accounts.
+
+Passwords use salted scrypt hashes. Verification links expire after one hour and are stored as keyed hashes. Successful sign-in sets an expiring signed cookie scoped to the care profile and role. Profile records and email addresses are held in a private database schema.
+
+### Verification emails
+
+Set `RESEND_API_KEY` to a Resend sending key and `CARECIRCLE_EMAIL_FROM` to an address on a verified sending domain. Set `CARECIRCLE_PUBLIC_URL` to the HTTPS deployment URL (or the local preview URL for development). Add the same variables to the Vercel production environment and redeploy. The setup page shows an availability message if email delivery is unconfigured.
+
+The dashboard has separate routes for care overview, medication schedules, appointments, dose history, the care assistant, and account management. Individual pages load only their relevant data.
 
 ## Medication tracking and the care assistant
 

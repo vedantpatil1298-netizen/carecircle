@@ -1,5 +1,5 @@
 import "server-only";
-import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 
 export const careRoles = ["elder", "caretaker", "family"] as const;
@@ -15,7 +15,7 @@ const cookieName = "carecircle_session";
 const lifetimeSeconds = 60 * 60 * 8;
 const alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
-type CareSession = { profileId: string; role: CareRole; expiresAt: number };
+type CareSession = { profileId: string; role: CareRole; expiresAt: number; accountId?: string };
 
 export function serverToken() {
   const token = process.env.CARECIRCLE_SERVER_TOKEN;
@@ -25,7 +25,7 @@ export function serverToken() {
   return token;
 }
 
-function digest(purpose: string, value: string) {
+export function digest(purpose: string, value: string) {
   return createHmac("sha256", serverToken()).update(purpose).update(":").update(value).digest("hex");
 }
 
@@ -33,11 +33,6 @@ export async function clientHash() {
   const incoming = await headers();
   const address = (incoming.get("x-vercel-forwarded-for") ?? "local").split(",")[0].trim();
   return digest("client", address);
-}
-
-export function generatePasscode() {
-  const code = Array.from(randomBytes(16), (byte) => alphabet[byte & 31]).join("");
-  return [code.slice(0, 4), code.slice(4, 8), code.slice(8, 12), code.slice(12)].join("-");
 }
 
 export function normalizePasscode(code: string) {
@@ -56,8 +51,8 @@ export function isCareRole(value: unknown): value is CareRole {
   return typeof value === "string" && careRoles.some((role) => role === value);
 }
 
-export async function setCareSession(profileId: string, role: CareRole) {
-  const session: CareSession = { profileId, role, expiresAt: Date.now() + lifetimeSeconds * 1000 };
+export async function setCareSession(profileId: string, role: CareRole, accountId?: string) {
+  const session: CareSession = { profileId, role, accountId, expiresAt: Date.now() + lifetimeSeconds * 1000 };
   const body = Buffer.from(JSON.stringify(session)).toString("base64url");
   const store = await cookies();
   store.set(cookieName, `${body}.${digest("session", body)}`, {
@@ -84,7 +79,8 @@ export async function getCareSession(): Promise<CareSession | null> {
     if (
       !parsed || typeof parsed.profileId !== "string" ||
       !/^[0-9a-f-]{36}$/.test(parsed.profileId) || !isCareRole(parsed.role) ||
-      typeof parsed.expiresAt !== "number" || parsed.expiresAt <= Date.now()
+      typeof parsed.expiresAt !== "number" || parsed.expiresAt <= Date.now() ||
+      (parsed.accountId !== undefined && (typeof parsed.accountId !== "string" || !/^[0-9a-f-]{36}$/.test(parsed.accountId)))
     ) return null;
 
     return parsed;
